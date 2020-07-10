@@ -61,15 +61,18 @@ class Cliente {
      */
     public function cadastrar($dados) {
 
-        $this->cpf      = trim($this->cpf);
-        $this->cpf      = str_replace(".", "", $dados['cpf']);
-        $this->cpf      = str_replace("-", "", $dados['cpf']);
+        $cpf = $dados['cpf'];
+        $cpf      = trim($cpf);
+        $cpf      = str_replace(".", "", $cpf);
+        $cpf      = str_replace("-", "", $cpf);
+        $this->cpf = $cpf;
+        
         $this->nomeIni  = $dados['nomeIni'];
         $this->nomeMeio = $dados['nomeMeio'];
 
         $sqlCliente = "INSERT INTO cliente (cpf, nomeIni, nomeMeio) VALUE('$this->cpf','$this->nomeIni','$this->nomeMeio')";
         $resultado = $this->con->query($sqlCliente);
-
+        
         if($resultado) {
             return  $msg = [
                         "status"   => "ok",
@@ -78,11 +81,12 @@ class Cliente {
         } else {
             return  $msg = [
                         "status" => "erro",
-                        "mensagem" => "Erro ao inserir Registro!",
+                        "mensagem" => "Erro ao inserir Registro!" . $resultado . " - " . mysqli_error($this->con),
                     ];
         }
 
         $this->con->close();
+        
         
     }
 
