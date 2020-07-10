@@ -61,7 +61,7 @@ class Cliente {
      */
     public function cadastrar($dados) {
 
-        $this->cpf      = trim($this->cpf );
+        $this->cpf      = trim($this->cpf);
         $this->cpf      = str_replace(".", "", $dados['cpf']);
         $this->cpf      = str_replace("-", "", $dados['cpf']);
         $this->nomeIni  = $dados['nomeIni'];
