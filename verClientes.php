@@ -1,5 +1,7 @@
 <?php
 include_once 'DAO/Cliente.php';
+include_once 'config/funcoes.php';
+$funcoes = new Funcoes();
 $cliente = new Cliente(); // Chama a classe de cliente
 
 $parametro = $_GET['cpf'];
@@ -8,31 +10,21 @@ if(!isset($cli))
     $cli = $cliente->ver($parametro);
 ?>
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
-    <title>Detalhes do Clientes</title>
-  </head>
-  <body>
-        <div class="container-fluid">
-            <h1>Detalhes do Cliente</h1>
-            <div class="caixa-nome">
-                <div class="valor"><strong>CPF: </strong><?php echo $cli["cpf"]; ?></div>
-                <div class="valor"><strong>Nome: </strong><?php echo $cli["nomeIni"] . " " . $cli["nomeMeio"]; ?></div>
-            </div>
-        </div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-  </body>
-</html>
+<?php echo $funcoes->the_header("Detalhes do Cliente"); ?>
+<h1>Detalhes do Cliente</h1>
+<div class="caixa-nome">
+    <div class="valor"><strong>CPF: </strong><?php echo $cli['cliente']["cpf"]; ?></div>
+    <div class="valor"><strong>Nome: </strong><?php echo $cli['cliente']["nomeIni"] . " " . $cli['cliente']["nomeMeio"]; ?></div>
+    <hr>
+    <div class="valor"><strong>Contatos: </strong></div>
+    <?php
+        $i = 1;
+        foreach($cli['contatos'] as $contato) { 
+    ?>
+    <div class="telefones"><?php echo '<strong>' . $i .'</strong> - '. $contato['contato']; ?></div>
+    <?php 
+        $i++;    
+        } 
+    ?>
+</div>        
+<?php echo $funcoes->the_footer(); ?>

@@ -46,10 +46,18 @@ class Cliente {
      * @param $id
      */
     public function ver($cpf) {
-        $sqlCliente = 'SELECT * FROM cliente WHERE cpf = '. $cpf;
+        $sqlCliente = 'SELECT * FROM cliente WHERE cpf ='.$cpf;
+        $resCliente = $this->con->query($sqlCliente);
 
-        $resultado = $this->con->query($sqlCliente);
-        return $resultado->fetch_assoc();
+        $sqlContato = 'SELECT * FROM contatoCli WHERE cpf = '.$cpf;                            
+
+        $resContato = $this->con->query($sqlContato);
+
+        $dados = [
+            'cliente' => $resCliente->fetch_assoc(),
+            'contatos' => $resContato->fetch_all(MYSQLI_ASSOC),
+        ];
+        return $dados;
     
         $this->con->close();
     }
@@ -95,8 +103,36 @@ class Cliente {
      * @param $id, $dados
      * Edita os dados vindo do formulário
      */
-    public function editar($id, $dados) {
-        //
+    public function editar($dados) {
+        var_dump($dados);
+
+        $cpfCliente = $dados['cpf_cliente'];
+        $cpf = $dados['cpf'];
+        $cpf      = trim($cpf);
+        $cpf      = str_replace(".", "", $cpf);
+        $cpf      = str_replace("-", "", $cpf);
+        $this->cpf = $cpf;
+        
+        $this->nomeIni  = $dados['nomeIni'];
+        $this->nomeMeio = $dados['nomeMeio'];
+
+        $sqlCliente = "UPDATE cliente SET cpf = '$this->cpf', nomeIni = '$this->nomeIni', nomeMeio = '$this->nomeMeio' WHERE cpf = '$cpfCliente'";
+        $resultado = $this->con->query($sqlCliente);
+        
+        if($resultado) {
+            return  $msg = [
+                        "status"   => "ok",
+                        "mensagem" => "Registro editado com sucesso!",
+                    ];
+        } else {
+            return  $msg = [
+                        "status" => "erro",
+                        "mensagem" => "Erro ao editar Registro!" . $resultado . " - " . mysqli_error($this->con),
+                    ];
+        }
+
+        $this->con->close();
+
     }
 
     /**
@@ -104,8 +140,23 @@ class Cliente {
      * @param $id
      * Deleta o registro
      */
-    public function deletar($id) {
-        //
+    public function deletar($cpf) {
+        $sqlCliente = "DELETE FROM cliente WHERE cpf = '$cpf'";
+        $resultado = $this->con->query($sqlCliente);
+        
+        if($resultado) {
+            return  $msg = [
+                        "status"   => "ok",
+                        "mensagem" => "Registro deletado com sucesso!",
+                    ];
+        } else {
+            return  $msg = [
+                        "status" => "erro",
+                        "mensagem" => "Erro ao deletar Registro!" . $resultado . " - " . mysqli_error($this->con),
+                    ];
+        }
+
+        $this->con->close();
     }
 
     /**
