@@ -55,7 +55,7 @@ class Funcoes {
               <a class="nav-link" href="#">Veiculos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Fornecedores</a>
+              <a class="nav-link" href="fornecedores.php">Fornecedores</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Peças</a>

@@ -104,8 +104,7 @@ class Cliente {
      * Edita os dados vindo do formulário
      */
     public function editar($dados) {
-        var_dump($dados);
-
+        
         $cpfCliente = $dados['cpf_cliente'];
         $cpf = $dados['cpf'];
         $cpf      = trim($cpf);

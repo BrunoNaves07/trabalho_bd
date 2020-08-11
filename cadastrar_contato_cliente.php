@@ -31,6 +31,8 @@ if( isset($_POST['salvar']) ){
                 <label for="exampleInputEmail1">Telefone</label>
                 <input type="text" class="form-control" id="telefone" name="telefone">
             </div>
-            <button type="submit" class="btn btn-primary" name="salvar">Salvar</button>
+            <div class="campo-botao-salvar">
+                <button type="submit" class="btn btn-primary botao-salvar" name="salvar">Salvar</button>
+            </div>
         </form>
 <?php echo $funcoes->the_footer(); ?>

@@ -42,6 +42,8 @@ if( isset($_POST['salvar']) ){
         <label for="exampleInputPassword1">Nome do Meio</label>
         <input type="text" class="form-control" id="nome" name="nomeMeio" value="<?php echo $cli['cliente']['nomeMeio']; ?>">
     </div>
-    <button type="submit" class="btn btn-primary" name="salvar">Salvar</button>
+    <div class="campo-botao-salvar">
+        <button type="submit" class="btn btn-primary botao-salvar" name="salvar">Salvar</button>
+    </div>
 </form>
 <?php echo $funcoes->the_footer(); ?>
