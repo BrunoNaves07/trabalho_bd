@@ -1,29 +1,22 @@
 <?php
-include_once 'DAO/ContatoCliente.php';
+include_once 'DAO/ContatoFornecedor.php';
 include_once 'config/funcoes.php';
 $funcoes = new Funcoes();
-$contatoCliente = new ContatoCliente(); // Chama a classe de cliente
+$contatoFornecedor = new ContatoFornecedor(); // Chama a classe de cliente
 
 $idContato = $_GET['id'];
 
 if( !isset($cont) ) {
-    $cont = $contatoCliente->ver($idContato);
+    $cont = $contatoFornecedor->ver($idContato);
 }
 
 if( isset($_POST['salvar']) ){
-    $editar = $contatoCliente->editar($_POST);
+    $editar = $contatoFornecedor->editar($_POST);
 }
 
 ?>
-<?php echo $funcoes->the_header("Cadastro do Cliente"); ?>
-<h1>Cadastro de Contato Cliente</h1>
-        <?php
-            if (isset($editar['status'])) {
-                echo '<div class="alert alert-danger" role="alert">
-                      '.$editar['mensagem'].'
-                      </div>';
-            }
-        ?>
+<?php echo $funcoes->the_header("Editar do Contato de Fornecedor"); ?>
+<h1>Editar Contato de Fornecedor</h1>
         <?php 
             if( isset($cadastrar) ) { 
                 if($cadastrar['status'] == "ok") {

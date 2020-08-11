@@ -35,7 +35,7 @@ if(isset($_POST['deletar'])) {
         <tr>
             <th scope="row"><?php echo $for["cnpj"]; ?></th>
             <td><?php echo $for["razaoSocial"]; ?></td>
-            <td><a href="contatos_cliente.php?cnpj=<?php echo $for["cnpj"]; ?>"><button class="btn btn-info btn-sm" type="button">Contatos</button></a></td>
+            <td><a href="contatos_fornecedor.php?cnpj=<?php echo $for["cnpj"]; ?>"><button class="btn btn-info btn-sm" type="button">Contatos</button></a></td>
             <td><a href="ver_fornecedor.php?cnpj=<?php echo $for["cnpj"]; ?>"><button type="button" class="btn btn-success btn-sm">Ver</button></a></td>
             <td><a href="editar_fornecedor.php?cnpj=<?php echo $for["cnpj"]; ?>"><button type="button" class="btn btn-primary btn-sm">Editar</button></a></td>
             <td>

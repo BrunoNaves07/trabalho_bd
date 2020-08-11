@@ -6,16 +6,20 @@ $cliente = new Cliente(); // Chama a classe de cliente
 
 $clientes = $cliente->index(); // Chama a Função index() para a pagina inicial
 
+// 
 if(isset($_POST['deletar'])) {
     $delete = $cliente->deletar($_POST['cpfDeletar']);
     if ($delete['status'] == "ok") {
         header("Refresh:0");
+    } else {
+        //
     }
 }
 
 ?>
 
 <?php echo $funcoes->the_header("Clientes"); ?>
+
 <h1>Clientes</h1>
 <a href="cadastroCliente.php"><button type="button" class="btn btn-primary btn-sm">Novo Cliente</button></a>
 <hr>

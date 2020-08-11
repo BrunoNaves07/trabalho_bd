@@ -21,9 +21,15 @@ if( isset($_POST['salvar']) ){
 <?php 
     if( isset($editar) ) { 
         if($editar['status'] == "ok") {
-            header('Location: clientes.php');
+            //header('Location: clientes.php');
+            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>'.$editar["mensagem"].'</strong>
+                    <a href="clientes.php"><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button></a>
+                </div>';
         } else {
-            echo '<div class="alert alert-danger" role="alert">'.$cadastrar["mensagem"].'</div>';
+            echo '<div class="alert alert-danger" role="alert">'.$editar["mensagem"].'</div>';
         }
     }
     
