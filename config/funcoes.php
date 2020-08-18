@@ -51,13 +51,10 @@ class Funcoes {
               <a class="nav-link" href="clientes.php">Clientes</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Veiculos</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="fornecedores.php">Fornecedores</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Peças</a>
+              <a class="nav-link" href="pecas.php">Peças</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Ordem de Serviços</a>

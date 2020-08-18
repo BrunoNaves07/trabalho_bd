@@ -1,18 +1,19 @@
 <?php
 /**
- * Classe Cliente
+ * Classe Veiculo
  */
 include_once 'config/conectar.php'; // Inclui a classe de conexão
 
-class Cliente {
+class Veiculo {
 
     // Atributos
-    private $config;
     private $con;
     // Atributos do model
+    private $placa;    
+    private $marca;
+    private $ano;
+    private $modelo;
     private $cpf;
-    private $nomeIni;
-    private $nomeMeio;
 
     /**
      * Construtor Padrão
@@ -31,10 +32,10 @@ class Cliente {
      * Index
      * Lista todos os dados
      */
-    public function index() {
-        $sqlCliente = 'SELECT * FROM cliente';
+    public function index($cpfCliente) {
+        $sqlVeiculo = "SELECT * FROM veiculos WHERE cpf = '$cpfCliente'";
 
-        $resultado = $this->con->query($sqlCliente);
+        $resultado = $this->con->query($sqlVeiculo);
         return $resultado->fetch_all(MYSQLI_ASSOC);
 
         $this->con->close();
@@ -45,23 +46,12 @@ class Cliente {
      * Ver
      * @param $id
      */
-    public function ver($cpf) {
-        $sqlCliente = 'SELECT * FROM cliente WHERE cpf ='.$cpf;
-        $resCliente = $this->con->query($sqlCliente);
+    public function ver($placa) {
+        $sqlVeiculo = "SELECT * FROM veiculos WHERE placa = '$placa'";
+        $resultado = $this->con->query($sqlVeiculo);
 
-        $sqlContato = 'SELECT * FROM contatoCli WHERE cpf = '.$cpf;                            
-        $resContato = $this->con->query($sqlContato);
+        return $resultado->fetch_assoc();
 
-        $sqlVeiculo = "SELECT * FROM veiculos WHERE cpf = '$cpf'";
-        $resVeiculo = $this->con->query($sqlVeiculo);
-
-        $dados = [
-            'cliente' => $resCliente->fetch_assoc(),
-            'contatos' => $resContato->fetch_all(MYSQLI_ASSOC),
-            'veiculos' => $resVeiculo->fetch_all(MYSQLI_ASSOC),
-        ];
-        return $dados;
-    
         $this->con->close();
     }
 
@@ -71,18 +61,14 @@ class Cliente {
      * Cadastra os dados vindo do formulario
      */
     public function cadastrar($dados) {
+        $this->placa  = $dados['placa'];
+        $this->modelo = $dados['modelo'];
+        $this->marca  = $dados['marca'];
+        $this->ano    = $dados['ano'];
+        $this->cpf    = $dados['cpf_cliente'];
 
-        $cpf = $dados['cpf'];
-        $cpf      = trim($cpf);
-        $cpf      = str_replace(".", "", $cpf);
-        $cpf      = str_replace("-", "", $cpf);
-        $this->cpf = $cpf;
-        
-        $this->nomeIni  = $dados['nomeIni'];
-        $this->nomeMeio = $dados['nomeMeio'];
-
-        $sqlCliente = "INSERT INTO cliente (cpf, nomeIni, nomeMeio) VALUE('$this->cpf','$this->nomeIni','$this->nomeMeio')";
-        $resultado = $this->con->query($sqlCliente);
+        $sqlVeiculo = "INSERT INTO veiculos (placa, modelo, marca, ano, cpf) VALUES ('$this->placa', '$this->modelo', '$this->marca', '$this->ano', '$this->cpf')";
+        $resultado = $this->con->query($sqlVeiculo);
         
         if($resultado) {
             return  $msg = [
@@ -97,8 +83,6 @@ class Cliente {
         }
 
         $this->con->close();
-        
-        
     }
 
     /**
@@ -106,20 +90,17 @@ class Cliente {
      * @param $id, $dados
      * Edita os dados vindo do formulário
      */
-    public function editar($dados) {
+    public function editar($dados) {                
+        $this->placa  = $dados['placa'];
+        $this->modelo = $dados['modelo'];
+        $this->marca  = $dados['marca'];
+        $this->ano    = $dados['ano'];
+        $this->cpf    = $dados['cpf_cliente'];
+        $placaVeiculo = $dados['placa_veiculo'];
         
-        $cpfCliente = $dados['cpf_cliente'];
-        $cpf = $dados['cpf'];
-        $cpf      = trim($cpf);
-        $cpf      = str_replace(".", "", $cpf);
-        $cpf      = str_replace("-", "", $cpf);
-        $this->cpf = $cpf;
-        
-        $this->nomeIni  = $dados['nomeIni'];
-        $this->nomeMeio = $dados['nomeMeio'];
 
-        $sqlCliente = "UPDATE cliente SET cpf = '$this->cpf', nomeIni = '$this->nomeIni', nomeMeio = '$this->nomeMeio' WHERE cpf = '$cpfCliente'";
-        $resultado = $this->con->query($sqlCliente);
+        $sqlVeiculo = "UPDATE veiculos  SET placa = '$this->placa', modelo = '$this->modelo', marca = '$this->marca', ano = '$this->ano', cpf = '$this->cpf' WHERE placa = '$placaVeiculo'";
+        $resultado = $this->con->query($sqlVeiculo);
         
         if($resultado) {
             return  $msg = [
@@ -134,7 +115,6 @@ class Cliente {
         }
 
         $this->con->close();
-
     }
 
     /**
@@ -142,9 +122,9 @@ class Cliente {
      * @param $id
      * Deleta o registro
      */
-    public function deletar($cpf) {
-        $sqlCliente = "DELETE FROM cliente WHERE cpf = '$cpf'";
-        $resultado = $this->con->query($sqlCliente);
+    public function deletar($placa) {
+        $sqlVeiculo = "DELETE FROM veiculos WHERE placa = '$placa'";
+        $resultado = $this->con->query($sqlVeiculo);
         
         if($resultado) {
             return  $msg = [

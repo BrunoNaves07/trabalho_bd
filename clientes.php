@@ -29,6 +29,7 @@ if(isset($_POST['deletar'])) {
             <th scope="col">CPF</th>
             <th scope="col">Nome</th>
             <th scope="col">Contatos</th>
+            <th scope="col">Veiculos</th>
             <th scope="col">Ver</th>
             <th scope="col">Editar</th>
             <th scope="col">Excluir</th>
@@ -40,6 +41,7 @@ if(isset($_POST['deletar'])) {
             <th scope="row"><?php echo $cli["cpf"]; ?></th>
             <td><?php echo $cli["nomeIni"] ." ".$cli["nomeMeio"]; ?></td>
             <td><a href="contatos_cliente.php?cpf=<?php echo $cli["cpf"]; ?>"><button class="btn btn-info btn-sm" type="button">Contatos</button></a></td>
+            <td><a href="veiculos.php?cpf=<?php echo $cli["cpf"]; ?>"><button class="btn btn-warning btn-sm" type="button">Veiculos</button></a></td>
             <td><a href="verClientes.php?cpf=<?php echo $cli["cpf"]; ?>"><button type="button" class="btn btn-success btn-sm">Ver</button></a></td>
             <td><a href="editarCliente.php?cpf=<?php echo $cli["cpf"]; ?>"><button type="button" class="btn btn-primary btn-sm">Editar</button></a></td>
             <td>

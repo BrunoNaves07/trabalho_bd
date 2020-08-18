@@ -1,18 +1,17 @@
 <?php
 /**
- * Classe Cliente
+ * Classe Peça
  */
 include_once 'config/conectar.php'; // Inclui a classe de conexão
 
-class Cliente {
+class Peca {
 
     // Atributos
-    private $config;
     private $con;
     // Atributos do model
-    private $cpf;
-    private $nomeIni;
-    private $nomeMeio;
+    private $descricao;    
+    private $preco;
+    private $estoque;    
 
     /**
      * Construtor Padrão
@@ -32,9 +31,9 @@ class Cliente {
      * Lista todos os dados
      */
     public function index() {
-        $sqlCliente = 'SELECT * FROM cliente';
+        $sqlPeca = "SELECT * FROM peca";
 
-        $resultado = $this->con->query($sqlCliente);
+        $resultado = $this->con->query($sqlPeca);
         return $resultado->fetch_all(MYSQLI_ASSOC);
 
         $this->con->close();
@@ -45,23 +44,12 @@ class Cliente {
      * Ver
      * @param $id
      */
-    public function ver($cpf) {
-        $sqlCliente = 'SELECT * FROM cliente WHERE cpf ='.$cpf;
-        $resCliente = $this->con->query($sqlCliente);
+    public function ver($idPeca) {
+        $sqlPeca = "SELECT * FROM peca WHERE idPeca = '$idPeca'";
+        $resultado = $this->con->query($sqlPeca);
 
-        $sqlContato = 'SELECT * FROM contatoCli WHERE cpf = '.$cpf;                            
-        $resContato = $this->con->query($sqlContato);
+        return $resultado->fetch_assoc();
 
-        $sqlVeiculo = "SELECT * FROM veiculos WHERE cpf = '$cpf'";
-        $resVeiculo = $this->con->query($sqlVeiculo);
-
-        $dados = [
-            'cliente' => $resCliente->fetch_assoc(),
-            'contatos' => $resContato->fetch_all(MYSQLI_ASSOC),
-            'veiculos' => $resVeiculo->fetch_all(MYSQLI_ASSOC),
-        ];
-        return $dados;
-    
         $this->con->close();
     }
 
@@ -71,18 +59,12 @@ class Cliente {
      * Cadastra os dados vindo do formulario
      */
     public function cadastrar($dados) {
+        $this->descricao  = $dados['descricao'];
+        $this->preco = $dados['preco'];
+        $this->estoque  = $dados['estoque'];
 
-        $cpf = $dados['cpf'];
-        $cpf      = trim($cpf);
-        $cpf      = str_replace(".", "", $cpf);
-        $cpf      = str_replace("-", "", $cpf);
-        $this->cpf = $cpf;
-        
-        $this->nomeIni  = $dados['nomeIni'];
-        $this->nomeMeio = $dados['nomeMeio'];
-
-        $sqlCliente = "INSERT INTO cliente (cpf, nomeIni, nomeMeio) VALUE('$this->cpf','$this->nomeIni','$this->nomeMeio')";
-        $resultado = $this->con->query($sqlCliente);
+        $sqlPeca = "INSERT INTO peca (descricao, preco, estoque) VALUES ('$this->descricao', '$this->preco', '$this->estoque')";
+        $resultado = $this->con->query($sqlPeca);        
         
         if($resultado) {
             return  $msg = [
@@ -97,8 +79,6 @@ class Cliente {
         }
 
         $this->con->close();
-        
-        
     }
 
     /**
@@ -106,20 +86,14 @@ class Cliente {
      * @param $id, $dados
      * Edita os dados vindo do formulário
      */
-    public function editar($dados) {
-        
-        $cpfCliente = $dados['cpf_cliente'];
-        $cpf = $dados['cpf'];
-        $cpf      = trim($cpf);
-        $cpf      = str_replace(".", "", $cpf);
-        $cpf      = str_replace("-", "", $cpf);
-        $this->cpf = $cpf;
-        
-        $this->nomeIni  = $dados['nomeIni'];
-        $this->nomeMeio = $dados['nomeMeio'];
+    public function editar($dados) {                
+        $this->descricao  = $dados['descricao'];
+        $this->preco = $dados['preco'];
+        $this->estoque  = $dados['estoque'];        
+        $idPeca = $dados['id_peca'];
 
-        $sqlCliente = "UPDATE cliente SET cpf = '$this->cpf', nomeIni = '$this->nomeIni', nomeMeio = '$this->nomeMeio' WHERE cpf = '$cpfCliente'";
-        $resultado = $this->con->query($sqlCliente);
+        $sqlPeca = "UPDATE peca  SET descricao = '$this->descricao', preco = '$this->preco', estoque = '$this->estoque' WHERE idPeca = '$idPeca'";
+        $resultado = $this->con->query($sqlPeca);
         
         if($resultado) {
             return  $msg = [
@@ -134,7 +108,6 @@ class Cliente {
         }
 
         $this->con->close();
-
     }
 
     /**
@@ -142,9 +115,9 @@ class Cliente {
      * @param $id
      * Deleta o registro
      */
-    public function deletar($cpf) {
-        $sqlCliente = "DELETE FROM cliente WHERE cpf = '$cpf'";
-        $resultado = $this->con->query($sqlCliente);
+    public function deletar($idPeca) {
+        $sqlPeca = "DELETE FROM peca WHERE idPeca = '$idPeca'";
+        $resultado = $this->con->query($sqlPeca);
         
         if($resultado) {
             return  $msg = [
@@ -168,5 +141,30 @@ class Cliente {
      */
     public function pesquisar($parametro) {
         //
+    }
+
+    /**
+     * Show
+     */
+    public function show($dados) {
+        $idPeca = $dados;
+        $sqlPeca = "SELECT * FROM peca WHERE idPeca = '$idPeca'";
+        $resPeca = $this->con->query($sqlPeca);
+        $peca = $resPeca->fetch_assoc();
+
+        $sqlComprada = "SELECT * FROM comprada as C
+                          JOIN fornecedor as F ON (C.cnpj = F.cnpj)                          
+                          WHERE C.idPeca = '$idPeca'";
+        $response = $this->con->query($sqlComprada);
+        $forncededores = $response->fetch_all(MYSQLI_ASSOC);
+
+        $dados = [
+            'peca' => $peca,
+            'fornecedores' => $forncededores,
+        ];
+
+        return $dados;
+
+        $this->con->close();
     }
 }

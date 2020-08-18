@@ -26,5 +26,17 @@ if(!isset($cli))
         $i++;    
         } 
     ?>
+    <hr>
+    <div class="valor"><strong>Veiculos do Cliente: </strong></div>
+    <?php
+        $j = 1;
+        foreach($cli['veiculos'] as $veic) {
+    ?>
+    <div class="valor"><strong>Placa: </strong> <?php echo $veic['placa']; ?></div>
+    <div class="valor"><strong>Marca: </strong> <?php echo $veic['marca']; ?></div>
+    <div class="valor"><strong>Modleo: </strong> <?php echo $veic['modelo']; ?></div>
+    <div class="valor"><strong>Ano: </strong> <?php echo $veic['ano']; ?></div>
+    <hr>
+    <?php } ?>
 </div>        
 <?php echo $funcoes->the_footer(); ?>
