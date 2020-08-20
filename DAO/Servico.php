@@ -1,19 +1,16 @@
 <?php
 /**
- * Classe Veiculo
+ * Classe Serviço
  */
 include_once 'config/conectar.php'; // Inclui a classe de conexão
 
-class Veiculo {
+class Servico {
 
     // Atributos
     private $con;
     // Atributos do model
-    private $placa;    
-    private $marca;
-    private $ano;
-    private $modelo;
-    private $cpf;
+    private $descricaoServico;    
+    private $valorServico;    
 
     /**
      * Construtor Padrão
@@ -32,10 +29,10 @@ class Veiculo {
      * Index
      * Lista todos os dados
      */
-    public function index($cpfCliente) {
-        $sqlVeiculo = "SELECT * FROM veiculos WHERE cpf = '$cpfCliente'";
+    public function index() {
+        $sqlServico = "SELECT * FROM servico";
 
-        $resultado = $this->con->query($sqlVeiculo);
+        $resultado = $this->con->query($sqlServico);
         return $resultado->fetch_all(MYSQLI_ASSOC);
 
         $this->con->close();
@@ -46,9 +43,9 @@ class Veiculo {
      * Ver
      * @param $id
      */
-    public function ver($placa) {
-        $sqlVeiculo = "SELECT * FROM veiculos WHERE placa = '$placa'";
-        $resultado = $this->con->query($sqlVeiculo);
+    public function ver($idServico) {
+        $sqlPeca = "SELECT * FROM servico WHERE idServico = '$idServico'";
+        $resultado = $this->con->query($sqlPeca);
 
         return $resultado->fetch_assoc();
 
@@ -61,14 +58,11 @@ class Veiculo {
      * Cadastra os dados vindo do formulario
      */
     public function cadastrar($dados) {
-        $this->placa  = $dados['placa'];
-        $this->modelo = $dados['modelo'];
-        $this->marca  = $dados['marca'];
-        $this->ano    = $dados['ano'];
-        $this->cpf    = $dados['cpf_cliente'];
+        $this->descricaoServico  = $dados['descricao_servico'];
+        $this->valorServico = $dados['valor_servico']; 
 
-        $sqlVeiculo = "INSERT INTO veiculos (placa, modelo, marca, ano, cpf) VALUES ('$this->placa', '$this->modelo', '$this->marca', '$this->ano', '$this->cpf')";
-        $resultado = $this->con->query($sqlVeiculo);
+        $sqlServico = "INSERT INTO servico (descricaoServico, valorServico) VALUES ('$this->descricaoServico', '$this->valorServico')";
+        $resultado = $this->con->query($sqlServico);        
         
         if($resultado) {
             return  $msg = [
@@ -91,16 +85,12 @@ class Veiculo {
      * Edita os dados vindo do formulário
      */
     public function editar($dados) {                
-        $this->placa  = $dados['placa'];
-        $this->modelo = $dados['modelo'];
-        $this->marca  = $dados['marca'];
-        $this->ano    = $dados['ano'];
-        $this->cpf    = $dados['cpf_cliente'];
-        $placaVeiculo = $dados['placa_veiculo'];
-        
+        $this->descricaoServico  = $dados['descricao_servico'];
+        $this->valorServico = $dados['valor_servico'];         
+        $idServico = $dados['id_servico'];
 
-        $sqlVeiculo = "UPDATE veiculos  SET placa = '$this->placa', modelo = '$this->modelo', marca = '$this->marca', ano = '$this->ano', cpf = '$this->cpf' WHERE placa = '$placaVeiculo'";
-        $resultado = $this->con->query($sqlVeiculo);
+        $sqlServico = "UPDATE servico  SET descricaoServico = '$this->descricaoServico', valorServico = '$this->valorServico' WHERE idServico = '$idServico'";
+        $resultado = $this->con->query($sqlServico);
         
         if($resultado) {
             return  $msg = [
@@ -122,9 +112,9 @@ class Veiculo {
      * @param $id
      * Deleta o registro
      */
-    public function deletar($placa) {
-        $sqlVeiculo = "DELETE FROM veiculos WHERE placa = '$placa'";
-        $resultado = $this->con->query($sqlVeiculo);
+    public function deletar($idServico) {
+        $sqlServico = "DELETE FROM servico WHERE idServico = '$idServico'";
+        $resultado = $this->con->query($sqlServico);
         
         if($resultado) {
             return  $msg = [
@@ -142,24 +132,18 @@ class Veiculo {
     }
 
     /**
-     * Todos os Veiculos
-     */
-    public function veiculos()
-    {
-        $sqlVeiculo = "SELECT * FROM veiculos as V JOIN cliente as C ON V.cpf = C.cpf";
-        $response = $this->con->query($sqlVeiculo);
-
-        return $response->fetch_all(MYSQLI_ASSOC);
-
-        $this->con->close();
-    }
-
-    /**
      * Pesquisar
      * @param $parametro
      * Faz a busca na tabela
      */
     public function pesquisar($parametro) {
+        //
+    }
+
+    /**
+     * Show
+     */
+    public function show($dados) {
         //
     }
 }

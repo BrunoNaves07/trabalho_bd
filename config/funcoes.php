@@ -57,12 +57,11 @@ class Funcoes {
               <a class="nav-link" href="pecas.php">Peças</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Ordem de Serviços</a>
+              <a class="nav-link" href="servicos.php">Serviços</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Serviços</a>
+              <a class="nav-link" href="ordemServicos.php">Ordem de Serviços</a>
             </li>
-
           </ul>
           
         </div>
