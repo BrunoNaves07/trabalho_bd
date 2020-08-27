@@ -37,26 +37,33 @@ class Home {
 
         $resultado = $response->fetch_all(MYSQLI_ASSOC);
 
-        $tabela = '<table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Descrição da OS</th>
-            <th scope="col">Data de Entrada</th>
-            <th scope="col">Data de Saída</th>
-          </tr>
-        </thead>
-        <tbody>';
-        foreach($resultado as $res) { 
-        $tabela .= '<tr>
-                        <td>'.$res['descricao'].'</td>
-                        <td>'.date("d/m/Y", strtotime($res['dataEntrada'])).'</td>
-                        <td>'.date("d/m/Y", strtotime($res['dataSaida'])).'</td>
-                    </tr>';
-        }
-        $tabela .= '</tbody>
-      </table>';
+        if ($resultado == null) {
+            return '<div class="alert alert-danger" role="alert">
+                        A busca não retornou resultado!
+                    </div>';
+        } else {
 
-        return $tabela;
+            $tabela = '<table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Descrição da OS</th>
+                <th scope="col">Data de Entrada</th>
+                <th scope="col">Data de Saída</th>
+            </tr>
+            </thead>
+            <tbody>';
+            foreach($resultado as $res) { 
+            $tabela .= '<tr>
+                            <td>'.$res['descricao'].'</td>
+                            <td>'.date("d/m/Y", strtotime($res['dataEntrada'])).'</td>
+                            <td>'.date("d/m/Y", strtotime($res['dataSaida'])).'</td>
+                        </tr>';
+            }
+            $tabela .= '</tbody>
+            </table>';
+
+            return $tabela;
+        }
 
         $this->con->close();
     }
@@ -72,22 +79,29 @@ class Home {
         $response = $this->con->query($busca);
         $resultado = $response->fetch_assoc();
 
-        $tabela = '<table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Veiculo</th>
-            <th scope="col">Cliente</th>            
-          </tr>
-        </thead>
-        <tbody>';
-        $tabela .= '<tr>
-                        <td>'.$resultado['marca'] . ' / ' . $resultado['modelo'] . ' - ' . $resultado['ano'] .'</td>
-                        <td>'.$resultado['nomeIni'] . ' ' . $resultado['nomeMeio'] .'</td>
-                    </tr>';
-        $tabela .= '</tbody>
-      </table>';
+        if ($resultado == null) {
+            return '<div class="alert alert-danger" role="alert">
+                        A busca não retornou resultado!
+                    </div>';
+        } else {
 
-        return $tabela;
+            $tabela = '<table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Veiculo</th>
+                <th scope="col">Cliente</th>            
+            </tr>
+            </thead>
+            <tbody>';
+            $tabela .= '<tr>
+                            <td>'.$resultado['marca'] . ' / ' . $resultado['modelo'] . ' - ' . $resultado['ano'] .'</td>
+                            <td>'.$resultado['nomeIni'] . ' ' . $resultado['nomeMeio'] .'</td>
+                        </tr>';
+            $tabela .= '</tbody>
+                        </table>';
+
+            return $tabela;
+        }
 
         $this->con->close();
     }
