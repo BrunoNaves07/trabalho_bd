@@ -61,4 +61,35 @@ class Home {
         $this->con->close();
     }
 
+    /**
+     * Retorna o Veiculo e seu proprietário
+     */
+    public function placa($placa)
+    {
+        $busca = "SELECT * FROM veiculos AS V
+                  JOIN cliente AS C ON V.cpf = C.cpf
+                  WHERE V.placa = '$placa'";
+        $response = $this->con->query($busca);
+        $resultado = $response->fetch_assoc();
+
+        $tabela = '<table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Veiculo</th>
+            <th scope="col">Cliente</th>            
+          </tr>
+        </thead>
+        <tbody>';
+        $tabela .= '<tr>
+                        <td>'.$resultado['marca'] . ' / ' . $resultado['modelo'] . ' - ' . $resultado['ano'] .'</td>
+                        <td>'.$resultado['nomeIni'] . ' ' . $resultado['nomeMeio'] .'</td>
+                    </tr>';
+        $tabela .= '</tbody>
+      </table>';
+
+        return $tabela;
+
+        $this->con->close();
+    }
+
 }
