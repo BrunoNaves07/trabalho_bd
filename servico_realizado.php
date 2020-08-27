@@ -8,6 +8,13 @@ $idOs = $_GET['idOrdem'];
 
 $realizados = $os->todosServicos($idOs);
 
+if(isset($_POST['deletar'])) {    
+    $deletar = $os->deletarServicoRealizado($_POST);
+    if ($deletar['status'] == "ok") {
+        header("Refresh:0");
+    }
+}
+
 ?>
 
 <?php echo $funcoes->the_header("Serviços Realizados"); ?>
@@ -20,8 +27,7 @@ $realizados = $os->todosServicos($idOs);
         <tr>
             <th scope="col">Descrição Serviço</th>
             <th scope="col">Preço</th>
-            <th scope="col">Peças</th>
-            <th scope="col">Detalhes</th>
+            <th scope="col">Peças</th>            
             <th scope="col">Excluir</th>
         </tr>
     </thead>
@@ -29,12 +35,11 @@ $realizados = $os->todosServicos($idOs);
         <?php foreach($realizados as $re) { ?>
         <tr>
             <th scope="row"><?php echo $re['descricaoServico']; ?></th>
-            <th scope="row">0</th>
-            <td><a href="pecas_sr.php?idServico=<?php echo $re["idServico"]; ?>"><button type="button" class="btn btn-warning btn-sm">Peças Usadas</button></a></td>
-            <td><a href="detalhes_sr.php?idOrdem=<?php echo $re["idOs"]; ?>"><button type="button" class="btn btn-success btn-sm">Detalhes</button></a></td>
+            <th scope="row"><?php echo $re['valorServico']; ?></th>
+            <td><a href="pecas_sr.php?idServico=<?php echo $re["idServico"]; ?>"><button type="button" class="btn btn-warning btn-sm">Peças Usadas</button></a></td>            
             <td>
                 <form method="POST">
-                    <input type="text" name="idDeletar" value="<?php echo "1"; ?>" hidden>
+                    <input type="text" name="idDeletar" value="<?php echo $re["idServico"]; ?>" hidden>
                     <button type="submit" class="btn btn-danger btn-sm" name="deletar">Excluir</button>
                 </form>
             </td>

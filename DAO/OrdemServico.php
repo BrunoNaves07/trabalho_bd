@@ -177,11 +177,19 @@ class OrdemServico {
      */
     public function todosServicos($idOs)
     {
-        $sqlTodosServicos = "SELECT * FROM contem as C
+        /*$sqlTodosServicos = "SELECT C.*, S.*, O.*, SUM(U.valorPecas) as totalPeca FROM contem as C
                              INNER JOIN ordemServico as O ON C.idOs = O.idOS
                              INNER JOIN servico as S ON C.idServico = S.idServico
-                             WHERE C.idOS = '$idOs'";
+                             INNER JOIN usaPeca as U ON S.idServico = U.idServico                             
+                             WHERE C.idOS = '$idOs'";*/
+        $sqlTodosServicos = "SELECT * FROM contem as C 
+                             JOIN ordemServico as O ON C.idOs = O.idOs
+                             JOIN servico as S ON C.idServico = S.idServico                             
+                             WHERE C.idOs = '$idOs'";
+                  
+        
         $response = $this->con->query($sqlTodosServicos);
+        
         //var_dump($response->fetch_all(MYSQLI_ASSOC));
 
         return $response->fetch_all(MYSQLI_ASSOC);
@@ -295,6 +303,69 @@ class OrdemServico {
             return  $msg = [
                         "status" => "erro",
                         "mensagem" => "Erro ao inserir Registro!" . $resultado . " - " . mysqli_error($this->con),
+                    ];
+        }
+
+        $this->con->close();
+    }
+
+    /**
+     * Detalhes completo da Ordem de Serviço
+     * @return array
+     */
+    public function detalhes($idOrdem)
+    {
+        // Retorna dados da Ordem, Veiculo, Cliente
+        $sqlOrdem = "SELECT * FROM ordemServico AS O
+                       JOIN veiculos AS V ON O.placa = V.placa
+                       JOIN cliente AS C ON V.cpf = C.cpf
+                       WHERE O.idOS = '$idOrdem'";
+        $responseOrdem = $this->con->query($sqlOrdem);
+        $dadosOrdem = $responseOrdem->fetch_assoc();
+
+        // Retorna dados dos Serviços Realizados
+        $sqlServicos = "SELECT * FROM contem AS C
+                        JOIN servico AS S ON C.idServico = S.idServico
+                        WHERE C.idOs = '$idOrdem'";
+        $responseServicos = $this->con->query($sqlServicos);
+        $servicos = $responseServicos->fetch_all(MYSQLI_ASSOC);
+
+        // Retorna dados das Peças Usadas no Serviço
+        $sqlPecas = "SELECT * FROM usaPeca as U
+                     JOIN peca as P ON U.idPeca = P.idPeca
+                     JOIN servico as S ON U.idServico = S.idServico";
+
+        $responsePeca = $this->con->query($sqlPecas);
+        $pecas = $responsePeca->fetch_all(MYSQLI_ASSOC);
+
+        $ordemServico = [
+            'dadosOrdem' => $dadosOrdem,
+            'servicos'   => $servicos,
+            'pecas'      => $pecas,
+        ];
+
+        return $ordemServico;
+    }
+
+    /**
+     * Deleta um serviço realizado
+     */
+    public function deletarServicoRealizado($dados)
+    {        
+        $idServico = $dados['idDeletar'];
+        $sqlItem = "DELETE FROM contem WHERE idServico = '$idServico'";
+        $resultado = $this->con->query($sqlItem);
+
+        if($resultado) {
+            return  $msg = [
+                        "status"   => "ok",
+                        "mensagem" => "Registro deletado com sucesso!",                        
+                        'idServico' => $idServico,
+                    ];
+        } else {
+            return  $msg = [
+                        "status" => "erro",
+                        "mensagem" => "Erro ao deletar Registro!" . $resultado . " - " . mysqli_error($this->con),
                     ];
         }
 
